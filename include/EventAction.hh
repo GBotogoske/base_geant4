@@ -20,6 +20,7 @@ public:
     void AddRemittedPhoton();
     void AddDetectedPhoton();
     void AddWavelengthEmitted(G4double energy);
+    void AddWavelengthRemitted(G4double energy);
 
 private:
     G4double fInitialAlphaEnergy;
@@ -28,6 +29,7 @@ private:
     G4int fNumPhotonsRemitted;
     G4int fNumPhotonsDetected;
     std::vector<G4double> fWavelengthEmitted;
+    std::vector<G4double> fWavelengthRemitted;
 
 };
 

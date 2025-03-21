@@ -49,6 +49,21 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
         G4LogicalVolume* currentVolume = track->GetVolume()->GetLogicalVolume();
         G4String volumeName = currentVolume->GetName();
         
+        G4double photonEnergy = track->GetKineticEnergy();  // pega a energia do fóton
+         // Contagem de fótons na criação (como antes)
+        if (track->GetCurrentStepNumber() == 1) {
+            if (creatorProcess) {
+                if (processName == "Scintillation") {
+                    fEventAction->AddEmittedPhoton();
+                    fEventAction->AddWavelengthEmitted(photonEnergy);
+                }
+                else if (processName == "OpWLS") {
+                    fEventAction->AddRemittedPhoton();
+                    fEventAction->AddWavelengthRemitted(photonEnergy);
+                }
+            }
+        }
+
         // Verifica se fóton entrou no volume metálico ou na ARAPUCA
         if (volumeName == "MetalBlock" || volumeName == "ArapucaVolume") {
             G4ThreeVector prePos = aPrePoint->GetPosition();
@@ -66,17 +81,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
             return;
         }
 
-        // Contagem de fótons na criação (como antes)
-        if (track->GetCurrentStepNumber() == 1) {
-            if (creatorProcess) {
-                if (processName == "Scintillation") {
-                    fEventAction->AddEmittedPhoton();
-                }
-                else if (processName == "OpWLS") {
-                    fEventAction->AddRemittedPhoton();
-                }
-            }
-        }
 
     }
 }
