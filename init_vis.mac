@@ -1,0 +1,32 @@
+/run/verbose 2
+/event/verbose 0
+/particle/verbose 0
+
+# Abrir o visualizador OpenGL:
+ /vis/open OGL
+ /vis/sceneHandler/create OGL
+ /vis/viewer/create ! ! 600x600-0+0
+ /vis/viewer/set/lineSegmentsPerCircle 100
+
+# Criar a cena e adicionar volumes:
+ /vis/scene/create
+ /vis/scene/add/volume world -1 -1 none m 0 0 0 0 0 0
+ /vis/scene/add/axes 0 0 0 20 cm
+
+# Agora sim: conectar cena e handler
+ /vis/sceneHandler/attach
+
+# Pedir para armazenar trajetórias de todas as partículas:
+ /tracking/storeTrajectory 3
+
+# Configurar como as trajetórias devem aparecer:
+/vis/modeling/trajectories/create/drawByCharge
+
+/vis/scene/add/trajectories
+
+
+# Adicionar as trajetórias suavemente à cena:
+ /vis/scene/add/trajectories smooth
+
+# Atualizar o viewer:
+ /vis/viewer/refresh

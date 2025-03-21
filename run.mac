@@ -1,0 +1,12 @@
+/run/initialize
+
+# Número de eventos
+/run/beamOn 100
+
+# Verbosidade
+/control/verbose 1
+/run/verbose 1
+/event/verbose 1
+/particle/verbose 1
+
+# Salvar automaticamente no arquivo ROOT já definido no RunAction

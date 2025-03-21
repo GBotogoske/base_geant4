@@ -1,0 +1,2 @@
+/usr/local/share/Geant4AlphaSimulation/init_vis.mac
+/usr/local/share/Geant4AlphaSimulation/run.mac

@@ -1,0 +1,7 @@
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/geant4_alpha_sim.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/edit_cache.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/rebuild_cache.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/list_install_components.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/install.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/install/local.dir
+/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles/install/strip.dir
