@@ -83,7 +83,56 @@ auto DetectorConstruction::fill_cryostat(G4LogicalVolume* logicMetal)
     G4VPhysicalVolume* physLAr = new G4PVPlacement(0, G4ThreeVector(), logicLAr, "LArVolume", logicMetal, false, 0);
 
     return std::make_pair(logicLAr, physLAr);
+}
 
+auto DetectorConstruction::place_source(G4LogicalVolume* logicLAr)
+{
+    G4NistManager* nist = G4NistManager::Instance();
+    
+    fAlphaSource = nist->FindOrBuildMaterial("G4_Am");
+    // Fonte de Amerício-241 no centro
+    G4double sourceRadius = 0.5*cm;
+    G4double sourceThickness = 0.1*cm;
+    G4Tubs* solidSource = new G4Tubs("AlphaSource", 0, sourceRadius, sourceThickness/2, 0, 360*deg);
+    G4LogicalVolume* logicSource = new G4LogicalVolume(solidSource, fAlphaSource, "AlphaSource");
+    auto physSource = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicSource, "AlphaSource", logicLAr, false, 0);
+
+    return std::make_pair(logicSource, physSource);
+
+}
+
+auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
+{
+    G4NistManager* nist = G4NistManager::Instance();
+    // Espessura da caixa metálica
+    G4double metalThickness = 1*cm;
+    G4double metalSize = 20*cm; // Tamanho externo da caixa metálica
+    G4double larSize = metalSize - 2 * metalThickness; // Tamanho interno de argônio líquido
+
+    // Propriedades ópticas do Argônio Líquido (não alterado)
+    const G4int numEntriesLAr = 2;
+    G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
+    G4double rindexLAr[numEntriesLAr] = {1.23, 1.23};
+   
+    // Janela óptica (ARAPUCA)
+    fArapucaMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+
+    G4MaterialPropertiesTable* fARAPUCA = new G4MaterialPropertiesTable();
+    fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr); // coloquei igual do argonio para o photon entrar sem problema ( ser transparente)
+    G4double AbsorptionArapuca[2]   = {1e-18*m, 1e-18*m};  
+    G4double AbsorptionArapuca_x[2]   = {1 ,1};  
+    fARAPUCA->AddProperty("ABSLENGTH", AbsorptionArapuca_x, AbsorptionArapuca, 2); //do tpb ta bom, que vai ser absorvido rapido
+    fArapucaMaterial->SetMaterialPropertiesTable(fARAPUCA);
+
+
+    fArapucaHeight = 2.0*cm;
+    G4double arapucaSize = metalSize / 4;
+    G4Box* solidArapuca = new G4Box("Arapuca", arapucaSize/2, arapucaSize/2, 0.5*cm);
+    G4LogicalVolume* logicArapuca = new G4LogicalVolume(solidArapuca, fArapucaMaterial, "ArapucaVolume");
+    G4ThreeVector arapucaPos = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight);
+    auto physArapuca = new G4PVPlacement(0, arapucaPos, logicArapuca, "Arapuca", logicLAr, false, 0);
+
+    return std::make_pair(logicArapuca, physArapuca);
 
 }
 
@@ -92,8 +141,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     // Obter materiais do NIST
     G4NistManager* nist = G4NistManager::Instance();
     
-    fAlphaSource = nist->FindOrBuildMaterial("G4_Am");
-
     // Definir TPB (material customizado)
     G4Element* elC = nist->FindOrBuildElement("C");
     G4Element* elH = nist->FindOrBuildElement("H");
@@ -107,106 +154,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     auto [logicMetal, physMetal] = build_cryostat(logicWorld);
     //Encher criostato
     auto [logicLAr, physLar] = fill_cryostat(logicMetal);
-
-    // Espessura da caixa metálica
-    G4double metalThickness = 1*cm;
-    G4double metalSize = 20*cm; // Tamanho externo da caixa metálica
-    G4double larSize = metalSize - 2 * metalThickness; // Tamanho interno de argônio líquido
-
-    // Espessura da camada de TPB
-    G4double tpbThickness = 1*um;  // espessura típica muito fina (1 micrômetro)
-
-    // Criar a camada fina de TPB na superfície interna da caixa metálica
-    G4double tpbSize = larSize + 2*tpbThickness; // Ligeiramente maior que o volume de LAr
-    G4Box* solidTPB = new G4Box("TPBCoating", tpbSize/2, tpbSize/2, tpbSize/2);
-    G4LogicalVolume* logicTPB = new G4LogicalVolume(solidTPB, fTPBCoating, "TPBCoating");
-
-
-    // Posiciona o volume de TPB dentro do volume metálico
-    G4VPhysicalVolume* physTPB = new G4PVPlacement(0, G4ThreeVector(), logicTPB, "TPBCoating", logicMetal, false, 0);
-
-    // Agora, o argônio líquido vai dentro da camada de TPB
-
-    // Fonte de Amerício-241 no centro
-    G4double sourceRadius = 0.5*cm;
-    G4double sourceThickness = 0.1*cm;
-    G4Tubs* solidSource = new G4Tubs("AlphaSource", 0, sourceRadius, sourceThickness/2, 0, 360*deg);
-    G4LogicalVolume* logicSource = new G4LogicalVolume(solidSource, fAlphaSource, "AlphaSource");
-    new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicSource, "AlphaSource", logicLAr, false, 0);
-
-    // Janela óptica (ARAPUCA)
-    fArapucaMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-    fArapucaHeight = 2.0*cm;
-    G4double arapucaSize = metalSize / 4;
-    G4Box* solidArapuca = new G4Box("Arapuca", arapucaSize/2, arapucaSize/2, 0.5*cm);
-    G4LogicalVolume* logicArapuca = new G4LogicalVolume(solidArapuca, fArapucaMaterial, "ArapucaVolume");
-    G4ThreeVector arapucaPos = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight);
-    new G4PVPlacement(0, arapucaPos, logicArapuca, "Arapuca", logicLAr, false, 0);
-
-
-    // Propriedades ópticas do TPB (não alterado)
-    G4MaterialPropertiesTable* tpbMPT = new G4MaterialPropertiesTable();
-
-    const G4int numEntriesTPB = 5;
-    G4double PhotonEnergyTPB[numEntriesTPB] = {2.5*eV, 3.0*eV, 7.0*eV, 9.0*eV, 10.0*eV};
-    G4double AbsorptionTPB[numEntriesTPB]   = {1.*m, 1.*m, 1.*m, 1.*m, 1.*m};  // quase sem absorção normal
-    G4double WLSAbsorptionTPB[numEntriesTPB] = {1000.*um, 500.*um, 0.01*um, 0.01*um, 0.01*um}; // absorção forte para conversão
- 
-    G4double EfficiencyTPB[numEntriesTPB]   = {0.0, 0.0, 0.7, 0.7, 0.7};
-    const G4int numEntriesEmissionTPB = 8;
-    G4double EmissionEnergyTPB[numEntriesEmissionTPB] = {2.0*eV, 2.2*eV, 2.4*eV, 2.6*eV, 2.8*eV, 3.0*eV, 3.1*eV, 3.2*eV};
-    G4double EmissionSpectrumTPB[numEntriesEmissionTPB] = {0.0, 0.05, 0.3, 0.6, 1.0, 0.3, 0.05, 0.0};
-
-    // Atualizando o MaterialPropertiesTable do TPB
-    tpbMPT->AddProperty("WLSCOMPONENT", EmissionEnergyTPB, EmissionSpectrumTPB, numEntriesEmissionTPB);
-    tpbMPT->AddProperty("ABSLENGTH", PhotonEnergyTPB, AbsorptionTPB, numEntriesTPB);
-    tpbMPT->AddProperty("WLSABSLENGTH", PhotonEnergyTPB, WLSAbsorptionTPB, numEntriesTPB);
-    tpbMPT->AddProperty("EFFICIENCY", PhotonEnergyTPB, EfficiencyTPB, numEntriesTPB);
-    tpbMPT->AddConstProperty("WLSTIMECONSTANT", 1.8*ns);
-
-    const G4int numEntriesTPB_RINDEX = 2;
-    G4double PhotonEnergyRINDEX[numEntriesTPB_RINDEX] = {2.0*eV, 10.0*eV};
-    G4double RindexTPB[numEntriesTPB_RINDEX] = {1.67, 1.67};  // Valor típico para TPB
-
-    tpbMPT->AddProperty("RINDEX", PhotonEnergyRINDEX, RindexTPB, numEntriesTPB_RINDEX);
-  
-    fTPBCoating->SetMaterialPropertiesTable(tpbMPT);
-
- 
-    // Propriedades ópticas do Argônio Líquido (não alterado)
-    const G4int numEntriesLAr = 2;
-    G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
-    G4double ScintSpectrumLAr[numEntriesLAr] = {1.0, 1.0};
-    G4double rindexLAr[numEntriesLAr] = {1.23, 1.23};
-    G4double absorptionLAr[numEntriesLAr] = {50.*m, 50.*m};
-    G4double rayleighLAr[numEntriesLAr] = {0.9*m, 0.9*m};
-
-    G4MaterialPropertiesTable* fARAPUCA = new G4MaterialPropertiesTable();
-    fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr); // coloquei igual do argonio para o photon entrar sem problema ( ser transparente)
-    G4double AbsorptionArapuca[2]   = {1e-18*m, 1e-18*m};  
-    G4double AbsorptionArapuca_x[2]   = {1 ,1};  
-    fARAPUCA->AddProperty("ABSLENGTH", AbsorptionArapuca_x, AbsorptionArapuca, 2); //do tpb ta bom, que vai ser absorvido rapido
-    fArapucaMaterial->SetMaterialPropertiesTable(fARAPUCA);
-
-    // Superfície absorvente
-    G4OpticalSurface* metalSurface = new G4OpticalSurface("MetalSurface");
-    metalSurface->SetType(dielectric_metal);
-    metalSurface->SetModel(unified);
-    metalSurface->SetFinish(polished);
-
-    G4MaterialPropertiesTable* metalMPT = new G4MaterialPropertiesTable();
-    const G4int numEntriesMetal = 2;
-    G4double photonEnergyMetal[numEntriesMetal] = {2.0*eV, 10.0*eV};
-    G4double reflectivityMetal[numEntriesMetal] = {0.0, 0.0};
-    metalMPT->AddProperty("REFLECTIVITY", photonEnergyMetal, reflectivityMetal, numEntriesMetal);
-    metalSurface->SetMaterialPropertiesTable(metalMPT);
-
-    // Definindo a superfície no sentido TPB → Metal
-    new G4LogicalBorderSurface("TPB_to_Metal_Surface", physTPB, physMetal, metalSurface);
-
-    // Definindo a superfície no sentido Metal → TPB
-    new G4LogicalBorderSurface("Metal_to_TPB_Surface", physMetal, physTPB, metalSurface);
-
+    //Colocar fonte
+    auto [logicSource, physSource] = place_source(logicLAr);
+    //Colocar Arapuca
+    auto [logicArapuca, physArapuca] = build_arapuca(logicLAr);
 
     physWorld->CheckOverlaps();
     return physWorld;
