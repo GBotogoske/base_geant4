@@ -56,7 +56,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     G4double x = r * std::cos(theta);
     G4double y = r * std::sin(theta);
     // posição inicial da partícula exatamente na superfície inferior do disco
-    G4double z = -d/2;  // Coloca a partícula imediatamente abaixo do disco
+    G4double z = -d;  // Coloca a partícula imediatamente abaixo do disco
 
     fParticleGun->SetParticlePosition(G4ThreeVector(x, y, z));
 

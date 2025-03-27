@@ -13,6 +13,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
         ~DetectorConstruction();
 
         virtual G4VPhysicalVolume* Construct();
+        auto build_world();
+        auto build_cryostat(G4LogicalVolume* LogicWorld);
+        auto fill_cryostat(G4LogicalVolume* LogicMetal);
 
     private:
         G4Material* fLArMaterial;

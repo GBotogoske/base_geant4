@@ -10,16 +10,88 @@
 #include "G4LogicalBorderSurface.hh"
 #include "G4MaterialPropertiesTable.hh"
 
+#include <utility> 
+
 DetectorConstruction::DetectorConstruction() {}
 DetectorConstruction::~DetectorConstruction() {}
+
+auto DetectorConstruction::build_world()
+{
+    G4NistManager* nist = G4NistManager::Instance();
+    // Criar volume externo (ar atmosférico)
+    G4double worldSize = 50*cm;
+    G4Box* solidWorld = new G4Box("World", worldSize, worldSize, worldSize);
+    G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, nist->FindOrBuildMaterial("G4_AIR"), "World");
+    G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0);
+
+    return std::make_pair(logicWorld, physWorld);
+}
+
+auto DetectorConstruction::build_cryostat(G4LogicalVolume* logicWorld)
+{
+    G4NistManager* nist = G4NistManager::Instance();
+    fMetalMaterial = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+    // Espessura da caixa metálica
+    G4double metalThickness = 1*cm;
+    G4double metalSize = 20*cm; // Tamanho externo da caixa metálica
+    
+    // Criar a caixa metálica (volume metálico com espessura)
+    G4Box* solidMetal = new G4Box("MetalBlock", metalSize/2, metalSize/2, metalSize/2);
+    G4LogicalVolume* logicMetal = new G4LogicalVolume(solidMetal, fMetalMaterial, "MetalBlock");
+    // Colocando a caixa metálica dentro do volume de ar
+    G4VPhysicalVolume* physMetal = new G4PVPlacement(0, G4ThreeVector(), logicMetal, "MetalBlock", logicWorld, false, 0);
+    return std::make_pair(logicMetal, physMetal);
+}
+
+auto DetectorConstruction::fill_cryostat(G4LogicalVolume* logicMetal)
+{
+    G4NistManager* nist = G4NistManager::Instance();
+    // Definir materiais
+    fLArMaterial = nist->FindOrBuildMaterial("G4_lAr");
+
+    // Propriedades ópticas do Argônio Líquido (não alterado)
+    G4MaterialPropertiesTable* larMPT = new G4MaterialPropertiesTable();
+    const G4int numEntriesLAr = 2;
+    G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
+    G4double ScintSpectrumLAr[numEntriesLAr] = {1.0, 1.0};
+    larMPT->AddProperty("SCINTILLATIONCOMPONENT1", ScintEnergyLAr, ScintSpectrumLAr, numEntriesLAr);
+    larMPT->AddProperty("SCINTILLATIONCOMPONENT2", ScintEnergyLAr, ScintSpectrumLAr, numEntriesLAr);
+    larMPT->AddConstProperty("SCINTILLATIONYIELD", 40000.0 / MeV);
+    larMPT->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 6.0*ns);
+    larMPT->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 1.6*us);
+    larMPT->AddConstProperty("SCINTILLATIONYIELD1", 0.3);
+    larMPT->AddConstProperty("SCINTILLATIONYIELD2", 0.7);
+    larMPT->AddConstProperty("RESOLUTIONSCALE", 1.);
+    
+    G4double rindexLAr[numEntriesLAr] = {1.23, 1.23};
+    larMPT->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr);
+    G4double absorptionLAr[numEntriesLAr] = {50.*m, 50.*m};
+    larMPT->AddProperty("ABSLENGTH", ScintEnergyLAr, absorptionLAr, numEntriesLAr);
+    G4double rayleighLAr[numEntriesLAr] = {0.9*m, 0.9*m};
+    larMPT->AddProperty("RAYLEIGH", ScintEnergyLAr, rayleighLAr, numEntriesLAr);
+    //larMPT->AddConstProperty("BIRKS_CONSTANT", 0.0486 * mm/MeV , true);
+    fLArMaterial->SetMaterialPropertiesTable(larMPT);
+
+
+    G4double metalThickness = 1*cm;
+    G4double metalSize = 20*cm; // Tamanho externo da caixa metálica
+    G4double larSize = metalSize - 2 * metalThickness; // Tamanho interno de argônio líquido
+
+    // Volume de argônio líquido (dentro da caixa metálica)
+    G4Box* solidLAr = new G4Box("LArVolume", larSize/2, larSize/2, larSize/2);
+    G4LogicalVolume* logicLAr = new G4LogicalVolume(solidLAr, fLArMaterial, "LArVolume");
+    G4VPhysicalVolume* physLAr = new G4PVPlacement(0, G4ThreeVector(), logicLAr, "LArVolume", logicMetal, false, 0);
+
+    return std::make_pair(logicLAr, physLAr);
+
+
+}
+
 
 G4VPhysicalVolume* DetectorConstruction::Construct() {
     // Obter materiais do NIST
     G4NistManager* nist = G4NistManager::Instance();
-
-    // Definir materiais
-    fLArMaterial = nist->FindOrBuildMaterial("G4_lAr");
-    fMetalMaterial = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+    
     fAlphaSource = nist->FindOrBuildMaterial("G4_Am");
 
     // Definir TPB (material customizado)
@@ -30,19 +102,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     fTPBCoating->AddElement(elH, 22);
 
     // Criar volume externo (ar atmosférico)
-    G4double worldSize = 50*cm;
-    G4Box* solidWorld = new G4Box("World", worldSize, worldSize, worldSize);
-    G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, nist->FindOrBuildMaterial("G4_AIR"), "World");
-    G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0);
+    auto [logicWorld, physWorld] = build_world();
+    //Criar criostato
+    auto [logicMetal, physMetal] = build_cryostat(logicWorld);
+    //Encher criostato
+    auto [logicLAr, physLar] = fill_cryostat(logicMetal);
 
     // Espessura da caixa metálica
     G4double metalThickness = 1*cm;
     G4double metalSize = 20*cm; // Tamanho externo da caixa metálica
     G4double larSize = metalSize - 2 * metalThickness; // Tamanho interno de argônio líquido
-
-    // Criar a caixa metálica (volume metálico com espessura)
-    G4Box* solidMetal = new G4Box("MetalBlock", metalSize/2, metalSize/2, metalSize/2);
-    G4LogicalVolume* logicMetal = new G4LogicalVolume(solidMetal, fMetalMaterial, "MetalBlock");
 
     // Espessura da camada de TPB
     G4double tpbThickness = 1*um;  // espessura típica muito fina (1 micrômetro)
@@ -52,19 +121,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Box* solidTPB = new G4Box("TPBCoating", tpbSize/2, tpbSize/2, tpbSize/2);
     G4LogicalVolume* logicTPB = new G4LogicalVolume(solidTPB, fTPBCoating, "TPBCoating");
 
-    // Volume de argônio líquido (dentro da caixa metálica)
-    G4Box* solidLAr = new G4Box("LArVolume", larSize/2, larSize/2, larSize/2);
-    G4LogicalVolume* logicLAr = new G4LogicalVolume(solidLAr, fLArMaterial, "LArVolume");
 
-    // Colocando a caixa metálica dentro do volume de ar
-    G4VPhysicalVolume* physMetal = new G4PVPlacement(0, G4ThreeVector(), logicMetal, "MetalBlock", logicWorld, false, 0);
-   
     // Posiciona o volume de TPB dentro do volume metálico
     G4VPhysicalVolume* physTPB = new G4PVPlacement(0, G4ThreeVector(), logicTPB, "TPBCoating", logicMetal, false, 0);
 
     // Agora, o argônio líquido vai dentro da camada de TPB
-    G4VPhysicalVolume* physLAr = new G4PVPlacement(0, G4ThreeVector(), logicLAr, "LArVolume", logicTPB, false, 0);
-
 
     // Fonte de Amerício-241 no centro
     G4double sourceRadius = 0.5*cm;
@@ -98,7 +159,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
     // Atualizando o MaterialPropertiesTable do TPB
     tpbMPT->AddProperty("WLSCOMPONENT", EmissionEnergyTPB, EmissionSpectrumTPB, numEntriesEmissionTPB);
-
     tpbMPT->AddProperty("ABSLENGTH", PhotonEnergyTPB, AbsorptionTPB, numEntriesTPB);
     tpbMPT->AddProperty("WLSABSLENGTH", PhotonEnergyTPB, WLSAbsorptionTPB, numEntriesTPB);
     tpbMPT->AddProperty("EFFICIENCY", PhotonEnergyTPB, EfficiencyTPB, numEntriesTPB);
@@ -112,28 +172,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   
     fTPBCoating->SetMaterialPropertiesTable(tpbMPT);
 
+ 
     // Propriedades ópticas do Argônio Líquido (não alterado)
-    G4MaterialPropertiesTable* larMPT = new G4MaterialPropertiesTable();
     const G4int numEntriesLAr = 2;
     G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
     G4double ScintSpectrumLAr[numEntriesLAr] = {1.0, 1.0};
-    larMPT->AddProperty("SCINTILLATIONCOMPONENT1", ScintEnergyLAr, ScintSpectrumLAr, numEntriesLAr);
-    larMPT->AddProperty("SCINTILLATIONCOMPONENT2", ScintEnergyLAr, ScintSpectrumLAr, numEntriesLAr);
-    larMPT->AddConstProperty("SCINTILLATIONYIELD", 40000.0 / MeV);
-    larMPT->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 6.0*ns);
-    larMPT->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 1.6*us);
-    larMPT->AddConstProperty("SCINTILLATIONYIELD1", 0.3);
-    larMPT->AddConstProperty("SCINTILLATIONYIELD2", 0.7);
-    larMPT->AddConstProperty("RESOLUTIONSCALE", 1.);
-    
     G4double rindexLAr[numEntriesLAr] = {1.23, 1.23};
-    larMPT->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr);
     G4double absorptionLAr[numEntriesLAr] = {50.*m, 50.*m};
-    larMPT->AddProperty("ABSLENGTH", ScintEnergyLAr, absorptionLAr, numEntriesLAr);
     G4double rayleighLAr[numEntriesLAr] = {0.9*m, 0.9*m};
-    larMPT->AddProperty("RAYLEIGH", ScintEnergyLAr, rayleighLAr, numEntriesLAr);
-    //larMPT->AddConstProperty("BIRKS_CONSTANT", 0.0486 * mm/MeV , true);
-    fLArMaterial->SetMaterialPropertiesTable(larMPT);
 
     G4MaterialPropertiesTable* fARAPUCA = new G4MaterialPropertiesTable();
     fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr); // coloquei igual do argonio para o photon entrar sem problema ( ser transparente)
