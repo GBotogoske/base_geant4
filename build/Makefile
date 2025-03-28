@@ -318,6 +318,30 @@ src/RunAction.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/geant4_alpha_sim.dir/build.make CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.s
 .PHONY : src/RunAction.cc.s
 
+src/StackingAction.o: src/StackingAction.cc.o
+.PHONY : src/StackingAction.o
+
+# target to build an object file
+src/StackingAction.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/geant4_alpha_sim.dir/build.make CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o
+.PHONY : src/StackingAction.cc.o
+
+src/StackingAction.i: src/StackingAction.cc.i
+.PHONY : src/StackingAction.i
+
+# target to preprocess a source file
+src/StackingAction.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/geant4_alpha_sim.dir/build.make CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.i
+.PHONY : src/StackingAction.cc.i
+
+src/StackingAction.s: src/StackingAction.cc.s
+.PHONY : src/StackingAction.s
+
+# target to generate assembly for a file
+src/StackingAction.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/geant4_alpha_sim.dir/build.make CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.s
+.PHONY : src/StackingAction.cc.s
+
 src/SteppingAction.o: src/SteppingAction.cc.o
 .PHONY : src/SteppingAction.o
 
@@ -373,6 +397,9 @@ help:
 	@echo "... src/RunAction.o"
 	@echo "... src/RunAction.i"
 	@echo "... src/RunAction.s"
+	@echo "... src/StackingAction.o"
+	@echo "... src/StackingAction.i"
+	@echo "... src/StackingAction.s"
 	@echo "... src/SteppingAction.o"
 	@echo "... src/SteppingAction.i"
 	@echo "... src/SteppingAction.s"

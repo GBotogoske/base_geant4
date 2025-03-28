@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/gabriel/Documents/geant4_sim/teste/src/EventAction.cc" "CMakeFiles/geant4_alpha_sim.dir/src/EventAction.cc.o" "gcc" "CMakeFiles/geant4_alpha_sim.dir/src/EventAction.cc.o.d"
   "/home/gabriel/Documents/geant4_sim/teste/src/PrimaryGeneratorAction.cc" "CMakeFiles/geant4_alpha_sim.dir/src/PrimaryGeneratorAction.cc.o" "gcc" "CMakeFiles/geant4_alpha_sim.dir/src/PrimaryGeneratorAction.cc.o.d"
   "/home/gabriel/Documents/geant4_sim/teste/src/RunAction.cc" "CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o" "gcc" "CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o.d"
+  "/home/gabriel/Documents/geant4_sim/teste/src/StackingAction.cc" "CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o" "gcc" "CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o.d"
   "/home/gabriel/Documents/geant4_sim/teste/src/SteppingAction.cc" "CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o" "gcc" "CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o.d"
   )
 

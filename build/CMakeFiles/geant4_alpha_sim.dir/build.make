@@ -139,10 +139,24 @@ CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gabriel/Documents/geant4_sim/teste/src/RunAction.cc -o CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.s
 
+CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o: CMakeFiles/geant4_alpha_sim.dir/flags.make
+CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o: /home/gabriel/Documents/geant4_sim/teste/src/StackingAction.cc
+CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o: CMakeFiles/geant4_alpha_sim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o -MF CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o.d -o CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o -c /home/gabriel/Documents/geant4_sim/teste/src/StackingAction.cc
+
+CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gabriel/Documents/geant4_sim/teste/src/StackingAction.cc > CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.i
+
+CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gabriel/Documents/geant4_sim/teste/src/StackingAction.cc -o CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.s
+
 CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: CMakeFiles/geant4_alpha_sim.dir/flags.make
 CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: /home/gabriel/Documents/geant4_sim/teste/src/SteppingAction.cc
 CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: CMakeFiles/geant4_alpha_sim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o -MF CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o.d -o CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o -c /home/gabriel/Documents/geant4_sim/teste/src/SteppingAction.cc
 
 CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.s: cmake_force
 CMakeFiles/geant4_alpha_sim.dir/main.cc.o: CMakeFiles/geant4_alpha_sim.dir/flags.make
 CMakeFiles/geant4_alpha_sim.dir/main.cc.o: /home/gabriel/Documents/geant4_sim/teste/main.cc
 CMakeFiles/geant4_alpha_sim.dir/main.cc.o: CMakeFiles/geant4_alpha_sim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/geant4_alpha_sim.dir/main.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/geant4_alpha_sim.dir/main.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/geant4_alpha_sim.dir/main.cc.o -MF CMakeFiles/geant4_alpha_sim.dir/main.cc.o.d -o CMakeFiles/geant4_alpha_sim.dir/main.cc.o -c /home/gabriel/Documents/geant4_sim/teste/main.cc
 
 CMakeFiles/geant4_alpha_sim.dir/main.cc.i: cmake_force
@@ -174,6 +188,7 @@ geant4_alpha_sim_OBJECTS = \
 "CMakeFiles/geant4_alpha_sim.dir/src/EventAction.cc.o" \
 "CMakeFiles/geant4_alpha_sim.dir/src/PrimaryGeneratorAction.cc.o" \
 "CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o" \
+"CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o" \
 "CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o" \
 "CMakeFiles/geant4_alpha_sim.dir/main.cc.o"
 
@@ -185,6 +200,7 @@ geant4_alpha_sim_EXTERNAL_OBJECTS =
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/src/EventAction.cc.o
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/src/PrimaryGeneratorAction.cc.o
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o
+/home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/main.cc.o
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/build.make
@@ -234,7 +250,7 @@ geant4_alpha_sim_EXTERNAL_OBJECTS =
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/lib/libG4clhep.so
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/lib/libG4ptl.so.2.3.3
 /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim: CMakeFiles/geant4_alpha_sim.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/gabriel/Documents/geant4_sim/teste/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable /home/gabriel/Documents/geant4_sim/teste/geant4_alpha_sim"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/geant4_alpha_sim.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

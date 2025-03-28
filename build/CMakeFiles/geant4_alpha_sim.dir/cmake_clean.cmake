@@ -13,6 +13,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/geant4_alpha_sim.dir/src/PrimaryGeneratorAction.cc.o.d"
   "CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o"
   "CMakeFiles/geant4_alpha_sim.dir/src/RunAction.cc.o.d"
+  "CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o"
+  "CMakeFiles/geant4_alpha_sim.dir/src/StackingAction.cc.o.d"
   "CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o"
   "CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o.d"
 )

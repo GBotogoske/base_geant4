@@ -67,18 +67,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
         }
 
         // Verifica se fóton entrou no volume metálico ou na ARAPUCA
-        if (volumeName == "MetalBlock" || volumeName == "ArapucaVolume") {
-            G4ThreeVector prePos = aPrePoint->GetPosition();
-            G4ThreeVector postPos = aPostPoint->GetPosition();
-            G4double arapucaTopSurfaceZ = (-10.0*cm) + (2.0*cm) + (0.5*cm);  // -metalSize/2 + fArapucaHeight + 0.5 cm
-            //std::cout << PreVolName << " " << PostVolName << std::endl;
-            //std::cout << prePos.z() << " " << postPos.z() << std::endl;
-            if (volumeName =="ArapucaVolume" && processName == "OpWLS")
-            {   
-                if (prePos.z() >= arapucaTopSurfaceZ) {
-                    fEventAction->AddDetectedPhoton();  // contou!
-                }
-            }
+        if (volumeName == "MetalBlock" || volumeName == "ArapucaShellVolume") {
             track->SetTrackStatus(fStopAndKill); // mata o fóton imediatamente
             return;
         }
