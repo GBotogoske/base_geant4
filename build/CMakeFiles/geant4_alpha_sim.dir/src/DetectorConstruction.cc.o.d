@@ -351,4 +351,11 @@ CMakeFiles/geant4_alpha_sim.dir/src/DetectorConstruction.cc.o: \
  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4LogicalSurface.icc \
  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4LogicalBorderSurface.icc \
  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4MaterialPropertiesTable.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SubtractionSolid.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DisplacedSolid.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4AffineTransform.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4AffineTransform.icc \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VBooleanProcessor.hh \
+ /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.icc \
  /usr/include/c++/13/utility /usr/include/c++/13/bits/stl_relops.h

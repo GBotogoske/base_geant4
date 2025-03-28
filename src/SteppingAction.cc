@@ -26,6 +26,7 @@ bool SteppingAction::IsInsideOpticalWindow(const G4ThreeVector& position) {
             position.z() > window_z_min && position.z() < window_z_max);
 }
 
+
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 
     G4Track* track = step->GetTrack();
@@ -52,6 +53,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
         G4double photonEnergy = track->GetKineticEnergy();  // pega a energia do fóton
          // Contagem de fótons na criação (como antes)
         if (track->GetCurrentStepNumber() == 1) {
+         
             if (creatorProcess) {
                 if (processName == "Scintillation") {
                     fEventAction->AddEmittedPhoton();

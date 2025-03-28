@@ -1226,13 +1226,18 @@ CMakeFiles/geant4_alpha_sim.dir/src/DetectorConstruction.cc.o: /home/gabriel/Doc
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/CLHEP/Vector/ThreeVector.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/CLHEP/Vector/TwoVector.h \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/CLHEP/Vector/TwoVector.icc \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4AffineTransform.hh \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4AffineTransform.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4AutoLock.hh \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.hh \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Box.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Box.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4CSGSolid.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DataVector.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DataVector.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DensityEffectCalculator.hh \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DisplacedSolid.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Element.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4ElementTable.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4ElementVector.hh \
@@ -1283,6 +1288,7 @@ CMakeFiles/geant4_alpha_sim.dir/src/DetectorConstruction.cc.o: /home/gabriel/Doc
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SandiaTable.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4String.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4String.icc \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SubtractionSolid.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SurfaceProperty.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SystemOfUnits.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Threading.hh \
@@ -1292,6 +1298,7 @@ CMakeFiles/geant4_alpha_sim.dir/src/DetectorConstruction.cc.o: /home/gabriel/Doc
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Tubs.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4TwoVector.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Types.hh \
+  /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VBooleanProcessor.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VPhysicalVolume.hh \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VPhysicalVolume.icc \
   /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VSolid.hh \
@@ -3704,6 +3711,10 @@ CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: /home/gabriel/Documents
 
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4ICRU90StoppingData.hh:
 
+/home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4DisplacedSolid.hh:
+
+/home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.hh:
+
 /home/gabriel/Documents/geant4_sim/teste/src/DetectorConstruction.cc:
 
 /home/gabriel/Documents/geant4_sim/teste/include/RunAction.hh:
@@ -4197,6 +4208,8 @@ CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: /home/gabriel/Documents
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4PolyhedraHistorical.hh:
 
 /usr/include/c++/13/bits/alloc_traits.h:
+
+/home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4VBooleanProcessor.hh:
 
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Polyhedra.hh:
 
@@ -4928,6 +4941,8 @@ CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: /home/gabriel/Documents
 
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4TrackingManager.hh:
 
+/home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4BooleanSolid.icc:
+
 /usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
 /usr/include/c++/13/bits/stl_vector.h:
@@ -5263,6 +5278,8 @@ CMakeFiles/geant4_alpha_sim.dir/src/SteppingAction.cc.o: /home/gabriel/Documents
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/CLHEP/Random/JamesRandom.h:
 
 /usr/include/c++/13/bits/align.h:
+
+/home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4SubtractionSolid.hh:
 
 /home/gabriel/Documents/geant4/v11.2.2/geant4-v11.2.2-install/include/Geant4/G4Normal3D.hh:
 

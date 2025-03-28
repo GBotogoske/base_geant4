@@ -9,6 +9,7 @@
 #include "G4OpticalSurface.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "G4MaterialPropertiesTable.hh"
+#include "G4SubtractionSolid.hh"
 
 #include <utility> 
 
@@ -112,27 +113,37 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     // Propriedades ópticas do Argônio Líquido (não alterado)
     const G4int numEntriesLAr = 2;
     G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
-    G4double rindexLAr[numEntriesLAr] = {1.23, 1.23};
+    G4double rindexLAr[numEntriesLAr] = {5, 5};
    
     // Janela óptica (ARAPUCA)
-    fArapucaMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+    fArapucafilterMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
     G4MaterialPropertiesTable* fARAPUCA = new G4MaterialPropertiesTable();
     fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr); // coloquei igual do argonio para o photon entrar sem problema ( ser transparente)
     G4double AbsorptionArapuca[2]   = {1e-18*m, 1e-18*m};  
     G4double AbsorptionArapuca_x[2]   = {1 ,1};  
     fARAPUCA->AddProperty("ABSLENGTH", AbsorptionArapuca_x, AbsorptionArapuca, 2); //do tpb ta bom, que vai ser absorvido rapido
-    fArapucaMaterial->SetMaterialPropertiesTable(fARAPUCA);
+    fArapucafilterMaterial->SetMaterialPropertiesTable(fARAPUCA);
 
 
     fArapucaHeight = 2.0*cm;
-    G4double arapucaSize = metalSize / 4;
-    G4Box* solidArapuca = new G4Box("Arapuca", arapucaSize/2, arapucaSize/2, 0.5*cm);
-    G4LogicalVolume* logicArapuca = new G4LogicalVolume(solidArapuca, fArapucaMaterial, "ArapucaVolume");
-    G4ThreeVector arapucaPos = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight);
-    auto physArapuca = new G4PVPlacement(0, arapucaPos, logicArapuca, "Arapuca", logicLAr, false, 0);
+    G4double arapuca_open = metalSize / 4;
+    G4double arapucaBoxSize = metalSize / 3;
+    G4double arapucaBox_thickness = 1*cm;
+    G4Box* solidArapucaFilter = new G4Box("Arapuca_Filter", arapuca_open/2, arapuca_open/2, 0.5*cm);
+    G4LogicalVolume* logicArapucaFilter = new G4LogicalVolume(solidArapucaFilter, fArapucafilterMaterial, "ArapucaFilterVolume");
+    G4ThreeVector arapucaPosFilter = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight);
+    auto physArapucaFilter = new G4PVPlacement(0, arapucaPosFilter, logicArapucaFilter, "Arapuca_Filter", logicLAr, false, 0);
 
-    return std::make_pair(logicArapuca, physArapuca);
+    G4Box* externArapuca = new G4Box("ext_Arapuca", arapucaBoxSize/2, arapucaBoxSize/2, arapucaBoxSize/2);
+    G4Box* internArapuca = new G4Box("int_Arapuca", arapucaBoxSize/2 - arapucaBox_thickness, arapucaBoxSize/2-arapucaBox_thickness, arapucaBoxSize/2-arapucaBox_thickness);
+    G4SubtractionSolid* arapucaShell = new G4SubtractionSolid("ArapucaShell", externArapuca, internArapuca);
+    G4Box* opening = new G4Box("open_Arapuca", arapuca_open/2, arapuca_open/2, arapucaBox_thickness/2 + 0.1*mm); // ligeiramente maior que a parede para garantir a subtração
+    G4ThreeVector openingPos(0, 0, (arapucaBoxSize/2) - (arapucaBox_thickness/2));
+    G4SubtractionSolid* arapucaSheelOpening = new G4SubtractionSolid("ArapucaShellOpening", arapucaShell, opening, nullptr, openingPos);
+    
+
+    return std::make_pair(logicArapucaFilter, physArapucaFilter);
 
 }
 

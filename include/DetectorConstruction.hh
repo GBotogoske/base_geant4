@@ -24,7 +24,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
         G4Material* fMetalMaterial;
         G4Material* fTPBCoating;
         G4Material* fAlphaSource;
-        G4Material* fArapucaMaterial; // Material óptico da janela
+        G4Material* fArapucafilterMaterial; // Material óptico da janela
         G4double fArapucaHeight;  // Altura da ARAPUCA em relação à base
         
 };

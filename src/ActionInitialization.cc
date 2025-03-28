@@ -3,6 +3,7 @@
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
+#include "StackingAction.hh"
 
 ActionInitialization::ActionInitialization() {}
 ActionInitialization::~ActionInitialization() {}
@@ -18,6 +19,9 @@ void ActionInitialization::Build() const {
     // Criar o EventAction
     EventAction* eventAction = new EventAction();
     SetUserAction(eventAction);
+
+
+    SetUserAction(new StackingAction());
 
     // SteppingAction recebe ponteiro para EventAction
     SetUserAction(new SteppingAction(eventAction));
