@@ -94,14 +94,14 @@ auto DetectorConstruction::place_source(G4LogicalVolume* logicLAr)
     G4double sourceRadius = 0.5*cm;
     G4double sourceThickness = 0.1*cm;
     G4Tubs* solidSource = new G4Tubs("AlphaSource", 0, sourceRadius, sourceThickness/2, 0, 360*deg);
-    G4LogicalVolume* logicSource = new G4LogicalVolume(solidSource, fAlphaSource, "AlphaSource");
-    auto physSource = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicSource, "AlphaSource", logicLAr, false, 0);
+    G4LogicalVolume* logicSource = new G4LogicalVolume(solidSource, fAlphaSource, "logicAlphaSource");
+    auto physSource = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicSource, "solidAlphaSource", logicLAr, false, 0);
 
     return std::make_pair(logicSource, physSource);
 
 }
 
-auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
+auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr, G4VPhysicalVolume* pysLAr)
 {
     G4NistManager* nist = G4NistManager::Instance();
     // Espessura da caixa metálica
@@ -112,7 +112,7 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     // Propriedades ópticas do Argônio Líquido (não alterado)
     const G4int numEntriesLAr = 2;
     G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
-    G4double rindexFilter[numEntriesLAr] = {5, 5};
+    G4double rindexFilter[numEntriesLAr] = {1.52, 1.52};
    
     //  propriedades da Janela óptica (filtro dicroico) (ARAPUCA)
     fArapucafilterMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
@@ -159,7 +159,7 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     PTP->SetMaterialPropertiesTable(MPT_PTP);
 
 
-
+    // propriedades do light guide
 
     //constroi o filtro
     fArapucaHeight = 6.0*cm;
@@ -190,10 +190,25 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     G4ThreeVector arapucaPos = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight );
     auto physArapuca = new G4PVPlacement(0, arapucaPos, logicArapucaSheel, "Arapuca_Box", logicLAr, false, 0);
 
-    //interface
 
+    //interface (+ propriedades ja janela otica)
+    G4OpticalSurface* dichroicSurface = new G4OpticalSurface("DichroicSurface");
+    dichroicSurface->SetType(dielectric_dielectric);
+    dichroicSurface->SetFinish(polished);
+    dichroicSurface->SetModel(unified);
 
+    const G4int nPoints = 7;
+    G4double energy[nPoints] = {3.76*eV, 3.54*eV, 3.31*eV, 3.10*eV, 3.02*eV, 2.88*eV, 2.76*eV};
+    G4double reflectivity[nPoints] = {0.99, 0.98, 0.95, 0.50, 0.10, 0.10, 0.10};
+    G4double efficiency[nPoints] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+    G4double efficiency_filter[nPoints] = {1, 1, 1, 1, 1, 1, 1}; // assume interação total
+    G4MaterialPropertiesTable* dichroicMPT = new G4MaterialPropertiesTable();
+    dichroicMPT->AddProperty("REFLECTIVITY", energy, reflectivity, nPoints);
+    dichroicMPT->AddProperty("EFFICIENCY", energy, efficiency_filter, nPoints);
+    dichroicSurface->SetMaterialPropertiesTable(dichroicMPT);
 
+    new G4LogicalBorderSurface("DichroicFromInside", pysLAr, physArapucaFilter,  dichroicSurface);  // dentro para fora
+    new G4LogicalBorderSurface("DichroicFromOutside", physPTP, physArapucaFilter,  dichroicSurface);  // de fora para dentro
 
     return std::make_pair(logicArapucaFilter, physArapucaFilter);
 
@@ -213,7 +228,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     //Colocar fonte
     auto [logicSource, physSource] = place_source(logicLAr);
     //Colocar Arapuca
-    auto [logicArapuca, physArapuca] = build_arapuca(logicLAr);
+    auto [logicArapuca, physArapuca] = build_arapuca(logicLAr,physLar);
 
     physWorld->CheckOverlaps();
     return physWorld;

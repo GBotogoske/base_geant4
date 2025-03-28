@@ -67,7 +67,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
         }
 
         // Verifica se fóton entrou no volume metálico ou na ARAPUCA
-        if (volumeName == "MetalBlock" || volumeName == "ArapucaShellVolume") {
+        if (volumeName == "MetalBlock" || volumeName == "ArapucaShellVolume" || volumeName ==  "logicAlphaSource" ) {
             track->SetTrackStatus(fStopAndKill); // mata o fóton imediatamente
             return;
         }
