@@ -112,38 +112,42 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     // Propriedades ópticas do Argônio Líquido (não alterado)
     const G4int numEntriesLAr = 2;
     G4double ScintEnergyLAr[numEntriesLAr] = {9.60*eV, 9.80*eV};
-    G4double rindexLAr[numEntriesLAr] = {5, 5};
+    G4double rindexFilter[numEntriesLAr] = {5, 5};
    
     //  propriedades da Janela óptica (filtro dicroico) (ARAPUCA)
     fArapucafilterMaterial = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
     G4MaterialPropertiesTable* fARAPUCA = new G4MaterialPropertiesTable();
-    fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexLAr, numEntriesLAr); // coloquei igual do argonio para o photon entrar sem problema ( ser transparente)
-    G4double AbsorptionArapuca[2]   = {1e-18*m, 1e-18*m};  
-    G4double AbsorptionArapuca_x[2]   = {1 ,1};  
-    fARAPUCA->AddProperty("ABSLENGTH", AbsorptionArapuca_x, AbsorptionArapuca, 2); //do tpb ta bom, que vai ser absorvido rapido
+    fARAPUCA->AddProperty("RINDEX", ScintEnergyLAr, rindexFilter, numEntriesLAr); // 
     fArapucafilterMaterial->SetMaterialPropertiesTable(fARAPUCA);
 
     //propriedades da carcaça
     auto fplasticMaterial = nist->FindOrBuildMaterial("G4_POLYVINYL_CHLORIDE"); // ou outro material plástico
 
     //propriedades to PTP
-    const G4int NUM = 4;
-    G4double photonEnergy[NUM] = {3.35*eV, 3.6*eV, 4.3*eV, 5.0*eV}; // Energias de 240 nm (5.17 eV) até 370 nm (3.35 eV)
-    G4double rIndexPTP[NUM] = {1.65, 1.65, 1.65, 1.65};  // Índice de refração típico do PTP
-    G4double absLength[NUM] = {10*m, 10*m, 0.1*mm,  0.05*mm }; // Absorção: transparente no visível, absorve bem no UV
-    G4double wlsAbsLength[NUM] = {10*m,10*m, 0.1*mm, 0.05*mm}; // WLS absorção — controla onde ele pega o fóton VUV
-    G4double wlsEmission[NUM] = { 3.35*eV, 3.45*eV, 3.55*eV, 3.60*eV};     // Emissão espectral do PTP (~340–360 nm)
-    G4double efficiency[NUM] = {0.9, 0.9, 0.9, 0.9};    // Eficiência quântica da conversão
-    
-    // Cria a tabela de propriedades
+    const G4int nEntries = 8;
+    // Comprimento de onda [nm] → Energia [eV]
+    G4double photonEnergy[nEntries] = {3.03*eV, 3.38*eV, 3.49*eV, 3.58*eV, 3.70*eV, 4.13*eV, 4.43*eV, 4.96*eV };
+    // Emissão normalizada — valores aproximados do gráfico vermelho
+    G4double wlsEmission[nEntries] = {0.0, 0.3, 0.85, 1.0, 0.95, 0.05, 0.0, 0.0 };
+    // Absorção (1/ABSLENGTH) normalizada — do gráfico azul
+    // Como Geant4 espera ABSLENGTH em mm, usamos valores baixos para regiões absorventes
+    G4double wlsAbsLength[nEntries] = { 10*m, 1*m, 1*m, 0.1*mm, 0.05*mm, 0.05*mm, 0.02*mm, 0.01*mm };
+
     G4MaterialPropertiesTable* MPT_PTP = new G4MaterialPropertiesTable();
-    MPT_PTP->AddProperty("RINDEX", photonEnergy, rIndexPTP, NUM);
-    MPT_PTP->AddProperty("ABSLENGTH", photonEnergy, absLength, NUM);
-    MPT_PTP->AddProperty("WLSABSLENGTH", photonEnergy, wlsAbsLength, NUM);
-    MPT_PTP->AddProperty("WLSCOMPONENT", photonEnergy, wlsEmission, NUM);
-    MPT_PTP->AddProperty("EFFICIENCY", photonEnergy, efficiency, NUM);
-    MPT_PTP->AddConstProperty("WLSTIMECONSTANT", 1.0*ns); // tempo rápido
+
+    MPT_PTP->AddProperty("WLSABSLENGTH", photonEnergy, wlsAbsLength, nEntries);
+    MPT_PTP->AddProperty("WLSCOMPONENT", photonEnergy, wlsEmission, nEntries);
+    MPT_PTP->AddConstProperty("WLSTIMECONSTANT", 1.0*ns);
+    // Adicione também RINDEX e ABSLENGTH (para a região de emissão):
+    G4double rIndex[nEntries] = {1.65,1.65,1.65,1.65,1.65,1.65,1.65,1.65};
+    G4double absLength[nEntries] = {10*m,10*m,10*m,10*m,10*m,10*m,10*m,10*m};
+    MPT_PTP->AddProperty("RINDEX", photonEnergy, rIndex, nEntries);
+    MPT_PTP->AddProperty("ABSLENGTH", photonEnergy, absLength, nEntries);
+    // Se quiser: eficiência quântica
+    G4double efficiency[nEntries] = {0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9};
+    MPT_PTP->AddProperty("EFFICIENCY", photonEnergy, efficiency, nEntries);
+    
     // Define o material PTP
     G4Material* PTP = new G4Material("PTP", 1.23*g/cm3, 2);
     // Define os elementos carbono e hidrogênio
@@ -153,6 +157,9 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     PTP->AddElement(elC, 20);
     PTP->AddElement(elH, 14);
     PTP->SetMaterialPropertiesTable(MPT_PTP);
+
+
+
 
     //constroi o filtro
     fArapucaHeight = 6.0*cm;
@@ -182,6 +189,10 @@ auto DetectorConstruction::build_arapuca(G4LogicalVolume* logicLAr)
     G4LogicalVolume* logicArapucaSheel = new G4LogicalVolume(arapucaSheelOpening, fplasticMaterial, "ArapucaShellVolume");
     G4ThreeVector arapucaPos = G4ThreeVector(0, 0, -metalSize/2 + fArapucaHeight );
     auto physArapuca = new G4PVPlacement(0, arapucaPos, logicArapucaSheel, "Arapuca_Box", logicLAr, false, 0);
+
+    //interface
+
+
 
 
     return std::make_pair(logicArapucaFilter, physArapucaFilter);
